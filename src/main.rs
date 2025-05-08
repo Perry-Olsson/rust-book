@@ -1,6 +1,5 @@
-mod terminal_io;
-mod temperature;
+mod enums;
 
 fn main() {
-    temperature::farenheit_to_celsius();
+    enums::run()
 }
