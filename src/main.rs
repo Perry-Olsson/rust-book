@@ -1,5 +1,6 @@
-mod enums;
+mod terminal_io;
+mod pig_latin;
 
 fn main() {
-    enums::run()
+    pig_latin::convert_to_pig_latin();
 }

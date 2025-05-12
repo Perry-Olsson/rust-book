@@ -1,24 +1,28 @@
-pub enum Message {
+pub enum Message<'a> {
     Quit,
     Move { x: i32, y: i32 },
-    Write(String),
+    Write(&'a str),
     ChangeColor(i32, i32, i32),
 }
 
-impl Message {
+impl Message<'_> {
     fn call(&self) {
         match self {
-            Self::Move{ x, y } => println!("Is Move"),
+            Self::Move{ x, y } => println!("Move to x: {}, y: {}", x, y),
             Self::Quit => println!("I quit"),
-            _ => println!("Not move")
+            Self::Write(val) => println!("{}", val),
+            Self::ChangeColor(val1, val2, val3) => println!("values: ({}, {}, {})", val1, val2, val3)
         }
     }
 }
 
 pub fn run() {
-    let message = Message::Move{x:123, y:321};
-    let other_message = Message::Quit;
-
+    let mut message = Message::Move{x:123, y:321};
     message.call();
-    other_message.call()
+    message = Message::Quit;
+    message.call();
+    message = Message::Write("Hello, world");
+    message.call();
+    message = Message::ChangeColor(5, 6, 7);
+    message.call();
 }
