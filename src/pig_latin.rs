@@ -2,7 +2,7 @@ use crate::terminal_io;
 
 pub fn convert_to_pig_latin() {
     let sentance = terminal_io::get_user_input("Type your sentence: ");
-    let mut pig_latin = String::with_capacity(sentance.len());
+    let mut pig_latin = String::with_capacity(sentance.len() * 1.5 as usize);
     for word in sentance.split_whitespace() {
         let first_char = word.chars().nth(0).unwrap();
         if is_vowel(first_char) {
