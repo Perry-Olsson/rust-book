@@ -1,6 +1,9 @@
-mod terminal_io;
-mod pig_latin;
+use std::fmt::{Debug};
 
 fn main() {
-    pig_latin::convert_to_pig_latin();
+    test("hello")
+}
+
+fn test<T: Debug>(par: T) {
+    println!("something: {:?}", par)
 }
