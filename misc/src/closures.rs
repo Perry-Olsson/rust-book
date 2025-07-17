@@ -16,6 +16,7 @@ pub fn run() {
 
     list.sort_by_key(|r| {
         sort_operations.push(&value);
+        println!("{}", r.height);
         r.width
     });
     println!("{list:#?}");

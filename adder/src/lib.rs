@@ -22,6 +22,7 @@ impl Rectangle {
     }
 }
 
+#[allow(dead_code)]
 pub struct Guess {
     value: i32,
 }
