@@ -5,11 +5,3 @@ version = 4
 [[package]]
 name = "adder"
 version = "0.1.0"
-
-[[package]]
-name = "minigrep"
-version = "0.1.0"
-
-[[package]]
-name = "misc"
-version = "0.1.0"
