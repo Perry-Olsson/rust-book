@@ -1,5 +1,7 @@
-mod closures;
+mod smart_pointers;
+mod ref_cell;
 
 fn main() {
-    closures::run();
+    smart_pointers::run();
+    ref_cell::run();
 }
