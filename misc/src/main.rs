@@ -1,7 +1,6 @@
-mod smart_pointers;
-mod ref_cell;
+mod memory_leak;
+mod weak_ref;
 
 fn main() {
-    smart_pointers::run();
-    ref_cell::run();
+    weak_ref::run2();
 }
