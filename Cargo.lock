@@ -7,6 +7,10 @@ name = "adder"
 version = "0.1.0"
 
 [[package]]
+name = "concurrency"
+version = "0.1.0"
+
+[[package]]
 name = "minigrep"
 version = "0.1.0"
 
