@@ -1,7 +1,12 @@
+pub mod channel;
+pub mod mutex;
+
 use std::thread;
 use std::time::Duration;
 
 pub fn run() {
+    thread();
+    wait_for_thread_to_finish();
     spawn_thread_with_closure();
 }
 
