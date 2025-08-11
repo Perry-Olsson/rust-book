@@ -9,7 +9,8 @@ mod ref_cell;
 mod smart_pointers;
 mod temperature;
 mod terminal_io;
+mod dynamic;
 
 fn main() {
-    weak_ref::run2();
+    dynamic::run();
 }
