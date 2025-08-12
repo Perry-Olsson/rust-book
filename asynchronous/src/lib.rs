@@ -5,7 +5,22 @@ use std::thread;
 use std::time::Instant;
 
 pub async fn run() {
-    message_stream().await
+    interval_and_message_stream().await
+}
+
+async fn interval_and_message_stream() {
+    let messages = get_messages().timeout(Duration::from_millis(200));
+    let intervals = get_intervals()
+        .map(|count| format!("Interval: {count}"))
+        .throttle(Duration::from_millis(100))
+        .timeout(Duration::from_secs(10));
+    let mut stream = pin!(messages.merge(intervals).take(20));
+    while let Some(result) = stream.next().await {
+        match result {
+            Ok(message) => println!("{message}"),
+            Err(reason) => eprintln!("Error with reason {}", reason)
+        }
+    }
 }
 
 async fn message_stream() {
@@ -19,6 +34,23 @@ async fn message_stream() {
     }
 }
 
+fn get_intervals() -> impl Stream<Item = u32> {
+    let (tx, rx) = trpl::channel();
+    trpl::spawn_task(async move {
+        let mut count = 0;
+        loop {
+            trpl::sleep(Duration::from_millis(1)).await;
+            count += 1;
+            if let Err(e) = tx.send(count) {
+                eprintln!("Unable to send interval {}. Error: {}", count, e);
+                break;
+            }
+        }
+    });
+
+    ReceiverStream::new(rx)
+}
+
 fn get_messages() -> impl Stream<Item = String> {
     let (tx, rx) = trpl::channel();
     trpl::spawn_task(async move {
@@ -26,7 +58,10 @@ fn get_messages() -> impl Stream<Item = String> {
         for (index, message) in messages.into_iter().enumerate() {
             let time_to_sleep= if index % 2 == 0 { 100 } else { 300 };
             trpl::sleep(Duration::from_millis(time_to_sleep)).await;
-            tx.send(format!("Message: '{message}'")).unwrap();
+            if let Err(e) = tx.send(format!("Message: '{message}'")) {
+                eprintln!("Unable to send message {}. error: {}", message, e);
+                break;
+            }
         }
     });
 
