@@ -5,7 +5,7 @@ use std::thread;
 use std::time::Instant;
 
 pub async fn run() {
-    interval_and_message_stream().await
+    combining_threads_and_async().await
 }
 
 async fn interval_and_message_stream() {
@@ -23,6 +23,21 @@ async fn interval_and_message_stream() {
     }
 }
 
+async fn combining_threads_and_async() {
+    let (tx, mut rx) = trpl::channel();
+
+    thread::spawn(move || {
+        for i in 1..11 {
+            tx.send(i).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    while let Some(v) = rx.recv().await {
+        println!("num: {}", v);
+    };
+}
+
 async fn message_stream() {
     let mut messages = pin!(get_messages().timeout(Duration::from_millis(200)));
 
@@ -32,6 +47,23 @@ async fn message_stream() {
             Err(reason) => eprintln!("Error with reason {}", reason)
         }
     }
+}
+
+fn get_intervals_thread_based() -> impl Stream<Item = u32> {
+    let (tx, rx) = trpl::channel();
+    thread::spawn(move || {
+        let mut count = 0;
+        loop {
+            thread::sleep(Duration::from_millis(1));
+            count += 1;
+            if let Err(e) = tx.send(count) {
+                eprintln!("Unable to send interval {}. Error: {}", count, e);
+                break;
+            }
+        }
+    });
+
+    ReceiverStream::new(rx)
 }
 
 fn get_intervals() -> impl Stream<Item = u32> {
