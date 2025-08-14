@@ -10,7 +10,8 @@ mod smart_pointers;
 mod temperature;
 mod terminal_io;
 mod dynamic;
+mod object_oriented;
 
 fn main() {
-    dynamic::run();
+    object_oriented::run();
 }
