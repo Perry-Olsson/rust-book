@@ -1,4 +1,4 @@
-use crate::Post;
+use crate::post::Post;
 
 pub trait State {
     fn request_review(self: Box<Self>) -> Box<dyn State>;
