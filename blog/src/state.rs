@@ -12,23 +12,17 @@ pub trait State {
     fn reject(self: Box<Self>) -> Box<dyn State>;
 }
 
-pub struct Draft {
-    rejected: bool
-}
+pub struct Draft {}
 
 impl Draft {
     pub fn new() -> Draft {
-        Draft { rejected: false } 
-    }
-
-    pub fn rejected() -> Draft {
-        Draft { rejected: true }
+        Draft { } 
     }
 }
 
 impl State for Draft {
     fn request_review(self: Box<Self>) -> Box<dyn State> {
-        if self.rejected { Box::new(PendingReview::rejected()) } else { Box::new(PendingReview::new()) }
+        Box::new(PendingReview::new())
     }
 
     fn approve(self: Box<Self>) -> Box<dyn State> {
@@ -40,18 +34,11 @@ impl State for Draft {
     }
 }
 
-pub struct PendingReview {
-    approvals: u8,
-    approvals_required: u8
-}
+pub struct PendingReview {}
 
 impl PendingReview {
     pub fn new() -> PendingReview {
-        PendingReview { approvals: 0, approvals_required: 1 }
-    }
-
-    pub fn rejected() -> PendingReview {
-        PendingReview { approvals: 0, approvals_required: 2 }
+        PendingReview {}
     }
 }
 
@@ -61,20 +48,21 @@ impl State for PendingReview {
     }
 
     fn approve(mut self: Box<Self>) -> Box<dyn State> {
-        self.approvals += 1;
-        if self.approvals == self.approvals_required {
-            Box::new(Published{})
-        } else {
-            self
-        }
+        Box::new(Published::new())
     }
 
     fn reject(self: Box<Self>) -> Box<dyn State> {
-        Box::new(Draft::rejected())
+        Box::new(Rejected::new())
     }
 }
 
 pub struct Published {}
+
+impl Published {
+    fn new() -> Published {
+        Published {}
+    }
+}
 
 impl State for Published {
     fn request_review(self: Box<Self>) -> Box<dyn State> {
@@ -87,6 +75,35 @@ impl State for Published {
 
     fn content<'a>(&self, post: &'a Post) -> &'a str {
         &post.content[..]
+    }
+
+    fn reject(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+}
+
+pub struct Rejected {
+    in_review: bool
+}
+
+impl Rejected {
+    fn new() -> Rejected {
+        Rejected { in_review: false }
+    }
+}
+
+impl State for Rejected {
+    fn request_review(mut self: Box<Self>) -> Box<dyn State> {
+        self.in_review = true;
+        self
+    }
+
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        if !self.in_review {
+            self
+        } else {
+            Box::new(PendingReview::new())
+        }
     }
 
     fn reject(self: Box<Self>) -> Box<dyn State> {
