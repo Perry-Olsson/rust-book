@@ -16,7 +16,9 @@ impl Post {
     }
 
     pub fn add_text(&mut self, text: &str) {
-        self.content.push_str(text);
+        if self.state.as_ref().unwrap().can_modify_content() {
+            self.content.push_str(text);
+        }
     }
 
     pub fn content(&self) -> &str {
@@ -45,6 +47,44 @@ impl Post {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn cannot_add_text_when_post_is_in_review() {
+        let mut post = Post::new();
+
+        post.add_text("hello");
+        post.request_review();
+        post.add_text(", I'm in review");
+        post.approve();
+        assert_eq!("hello", post.content());
+    }
+
+    #[test]
+    fn cannot_add_text_when_post_is_published() {
+        let mut post = Post::new();
+
+        post.add_text("hello");
+        post.request_review();
+        post.approve();
+        post.add_text(", I'mm published");
+        assert_eq!("hello", post.content());
+    }
+
+    #[test]
+    fn cannot_add_text_when_post_is_in_review_after_rejection() {
+        let mut post = Post::new();
+
+        post.add_text("hello");
+        post.request_review();
+        post.reject();
+        post.add_text(", I've been rejected and need to be changed");
+        post.request_review();
+        post.add_text("hello, I'm in review again");
+        post.approve();
+        post.add_text("hello, I have 1 approval");
+        post.approve();
+        assert_eq!("hello, I've been rejected and need to be changed", post.content());
+    }
 
     #[test]
     fn rejecting_a_post_reverts_it_back_to_draft() {
