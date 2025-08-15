@@ -162,6 +162,23 @@ mod tests {
         post.request_review();
         post.approve();
         assert_eq!("", post.content());
+        post.approve();
+        assert_eq!("hello", post.content());
+    }
+
+    #[test]
+    fn rejecting_a_draft_or_published_post_has_no_sideaffect() {
+        let mut post = Post::new();
+
+        post.add_text("hello");
+        post.reject();
+        assert_eq!("", post.content());
+        post.approve();
+        assert_eq!("", post.content());
+        post.request_review();
+        assert_eq!("", post.content());
+        post.approve();
+        assert_eq!("hello", post.content());
     }
 
     #[test]
