@@ -11,7 +11,8 @@ mod temperature;
 mod terminal_io;
 mod dynamic;
 mod object_oriented;
+mod matching;
 
 fn main() {
-    object_oriented::run();
+    matching::run();
 }
