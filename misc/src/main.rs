@@ -12,7 +12,8 @@ mod terminal_io;
 mod dynamic;
 mod object_oriented;
 mod matching;
+mod unsafe_fun;
 
 fn main() {
-    matching::run();
+    unsafe_fun::run();
 }
