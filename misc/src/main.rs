@@ -13,7 +13,8 @@ mod dynamic;
 mod object_oriented;
 mod matching;
 mod unsafe_fun;
+mod advanced_traits;
 
 fn main() {
-    unsafe_fun::run();
+    advanced_traits::run();
 }
