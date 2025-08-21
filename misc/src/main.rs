@@ -14,7 +14,8 @@ mod object_oriented;
 mod matching;
 mod unsafe_fun;
 mod advanced_traits;
+mod advanced_closures;
 
 fn main() {
-    advanced_traits::run();
+    advanced_closures::run();
 }
