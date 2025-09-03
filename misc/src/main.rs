@@ -15,7 +15,8 @@ mod matching;
 mod unsafe_fun;
 mod advanced_traits;
 mod advanced_closures;
+mod macros;
 
 fn main() {
-    advanced_closures::run();
+    macros::run()
 }
