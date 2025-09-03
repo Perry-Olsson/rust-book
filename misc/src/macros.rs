@@ -5,7 +5,9 @@ use hello_macro_derive::HelloMacro;
 struct Pancakes;
 
 #[derive(HelloMacro)]
-struct Syrup;
+struct Syrup {
+    viscosity: u8
+}
 
 pub fn run() {
     Pancakes::hello_macro();

@@ -9,6 +9,7 @@ pub fn hello_macro_derive(input: TokenStream) -> TokenStream {
 }
 
 fn impl_hello_macro(ast: &syn::DeriveInput) -> TokenStream {
+    println!("{:#?}", ast);
     let name = &ast.ident;
     let generated = quote! {
         impl HelloMacro for #name {
