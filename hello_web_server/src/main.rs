@@ -1,9 +1,5 @@
 use std::{
-    fs,
-    io::{prelude::*, BufReader},
-    net::{TcpListener, TcpStream},
-    thread, 
-    time::Duration
+    fs, io::{prelude::*, BufReader}, net::{TcpListener, TcpStream}, thread, time::Duration
 };
 use hello_web_server::ThreadPool;
 
