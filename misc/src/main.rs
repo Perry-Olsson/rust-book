@@ -16,7 +16,8 @@ mod unsafe_fun;
 mod advanced_traits;
 mod advanced_closures;
 mod macros;
+mod scoped_threads;
 
 fn main() {
-    macros::run()
+    scoped_threads::run()
 }
